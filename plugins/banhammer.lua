@@ -57,14 +57,14 @@ do
               send_large_msg('chat#id'..chat_id, NO_BAN)
             else
               ban_user(matches[2], chat_id)
-              send_large_msg('chat#id'..chat_id, full_name..' ['..matches[2]..'] banned')
+              send_large_msg('chat#id'..chat_id, full_name..'  ['..matches[2]..'] banned from here!')
             end
-          elseif matches[1] == 'superban' then
+          elseif matches[1] == 'sban' then
             if is_mod(matches[2], chat_id) then
               send_large_msg('chat#id'..chat_id, NO_SUPERBAN)
             else
               superban_user(matches[2], chat_id)
-              send_large_msg('chat#id'..chat_id, full_name..' ['..matches[2]..'] globally banned!')
+              send_large_msg('chat#id'..chat_id, full_name..'  ['..matches[2]..'] banned from all!')
             end
           elseif matches[1] == 'kick' then
             if is_mod(matches[2], chat_id) then
@@ -78,20 +78,20 @@ do
       if matches[1] == 'unban' then
         if is_banned(matches[2], chat_id) then
           unban_user(matches[2], chat_id)
-          send_large_msg('chat#id'..chat_id, 'User with ID ['..matches[2]..'] is unbanned.')
+          send_large_msg('chat#id'..chat_id, 'User ['..matches[2]..'] unbanned from here!.')
         else
-          send_large_msg('chat#id'..chat_id, 'No user with ID '..matches[2]..' in (super)ban list.')
+          send_large_msg('chat#id'..chat_id, 'User ['..matches[2]..'] is not banned!.')
         end
-      elseif matches[1] == 'superunban' then
+      elseif matches[1] == 'sunban' then
         if is_super_banned(matches[2]) then
           superunban_user(matches[2], chat_id)
-          send_large_msg('chat#id'..chat_id, 'User with ID ['..matches[2]..'] is globally unbanned.')
+          send_large_msg('chat#id'..chat_id, 'User ['..matches[2]..'] unbanned from all!.')
         else
-          send_large_msg('chat#id'..chat_id, 'No user with ID '..matches[2]..' in (super)ban list.')
+          send_large_msg('chat#id'..chat_id, ' user ['..matches[2]..'] is not banned from all!.')
         end
       end
       if not group_member then
-        send_large_msg('chat#id'..chat_id, 'No user with ID '..matches[2]..' in this group.')
+        send_large_msg('chat#id'..chat_id, 'user ['..matches[2]..'] not faund in this group.')
       end
     end
   end
@@ -113,19 +113,19 @@ do
         else
           ban_user(user_id, chat_id)
         end
-      elseif extra.match == 'superban' then
+      elseif extra.match == 'sban' then
         if is_mod(user_id, chat_id) then
           send_large_msg('chat#id'..chat_id, NO_SUPERBAN)
         else
           superban_user(user_id, chat_id)
-          send_large_msg('chat#id'..chat_id, full_name..' ['..user_id..'] globally banned!')
+          send_large_msg('chat#id'..chat_id, full_name..' ['..user_id..'] banned from all!')
         end
       elseif extra.match == 'unban' then
         unban_user(user_id, chat_id)
-        send_large_msg('chat#id'..chat_id, 'User '..user_id..' unbanned')
-      elseif extra.match == 'superunban' then
+        send_large_msg('chat#id'..chat_id, 'User ['..user_id..'] unbanned from here!')
+      elseif extra.match == 'sunban' then
         superunban_user(user_id, chat_id)
-        send_large_msg('chat#id'..chat_id, full_name..' ['..user_id..'] globally unbanned!')
+        send_large_msg('chat#id'..chat_id, full_name..' ['..user_id..'] unbanned from all!')
       elseif extra.match == 'whitelist' then
         redis:set('whitelist:user#id'..user_id, true)
         send_large_msg('chat#id'..chat_id, full_name..' ['..user_id..'] whitelisted')
@@ -155,21 +155,21 @@ do
             send_large_msg('chat#id'..chat_id, NO_BAN)
           else
             ban_user(user_id, chat_id)
-            send_large_msg('chat#id'..chat_id, 'User @'..username..' banned')
+            send_large_msg('chat#id'..chat_id, 'User @'..username..' banned from here!')
           end
-        elseif extra.match == 'superban' then
+        elseif extra.match == 'sban' then
           if is_mod(user_id, chat_id) then
             send_large_msg('chat#id'..chat_id, NO_SUPERBAN)
           else
             superban_user(user_id, chat_id)
-            send_large_msg('chat#id'..chat_id, 'User @'..username..' ['..user_id..'] globally banned!')
+            send_large_msg('chat#id'..chat_id, 'User < @'..username..' > ['..user_id..'] banned from all!')
           end
         elseif extra.match == 'unban' then
           unban_user(user_id, chat_id)
           send_large_msg('chat#id'..chat_id, 'User @'..username..' unbanned', ok_cb,  true)
-        elseif extra.match == 'superunban' then
+        elseif extra.match == 'sunban' then
           superunban_user(user_id, chat_id)
-          send_large_msg('chat#id'..chat_id, 'User @'..username..' ['..user_id..'] globally unbanned!')
+          send_large_msg('chat#id'..chat_id, 'User @'..username..' ['..user_id..'] unbanned from all!')
         end
       else
         return 'Use This in Your Groups.'
@@ -333,17 +333,17 @@ do
             msgr = res_user(string.gsub(matches[2], '@', ''), resolve_username, {msg=msg, match=matches[1]})
           end
         end
-        if matches[1] == 'antispam' then
+        if matches[1] == 'spam' then
           local data = load_data(_config.moderation.data)
           local settings = data[tostring(msg.to.id)]['settings']
-          if matches[2] == 'kick' then
+          if matches[2] == 'kickuser' then
             if settings.anti_flood ~= 'kick' then
               settings.anti_flood = 'kick'
               save_data(_config.moderation.data, data)
             end
               return 'Anti flood and spam protection already enabled.\nOffender will be kicked.'
             end
-          if matches[2] == 'ban' then
+          if matches[2] == 'banuser' then
             if settings.anti_flood ~= 'ban' then
               settings.anti_flood = 'ban'
               save_data(_config.moderation.data, data)
@@ -388,7 +388,7 @@ do
         end
       end
       if is_admin(msg.from.id, msg.to.id) then
-        if matches[1] == 'superban' then
+        if matches[1] == 'sban' then
           if msg.reply_id then
             msgr = get_message(msg.reply_id, action_by_reply, {msg=msg, match=matches[1]})
           elseif string.match(matches[2], '^%d+$') then
@@ -396,7 +396,7 @@ do
           elseif string.match(matches[2], '^@.+$') then
             msgr = res_user(string.gsub(matches[2], '@', ''), resolve_username, {msg=msg, match=matches[1]})
           end
-        elseif matches[1] == 'superunban' then
+        elseif matches[1] == 'sunban' then
           if msg.reply_id then
             msgr = get_message(msg.reply_id, action_by_reply, {msg=msg, match=matches[1]})
           elseif string.match(matches[2], '^%d+$') then
@@ -415,57 +415,30 @@ do
     description = 'Plugin to manage bans, kicks and white/black lists.',
     usage = {
       user = {
-        '!kickme : Kick yourself out of this group.'
-      },
-      admin = {
-        '!superban : If type in reply, will ban user globally.',
-        '!superban <user_id>/@<username> : Kick user_id/username from all chat and kicks it if joins again',
-        '!superunban : If type in reply, will unban user globally.',
-        '!superunban <user_id>/@<username> : Unban user_id/username globally.'
-      },
-      moderator = {
-        '!antispam kick : Enable flood and spam protection. Offender will be kicked.',
-        '!antispam ban : Enable flood and spam protection. Offender will be banned.',
-        '!antispam disable : Disable flood and spam protection',
-        '!ban : If type in reply, will ban user from chat group.',
-        '!ban <user_id>/<@username>: Kick user from chat and kicks it if joins chat again',
-        '!banlist : List users banned from chat group.',
-        '!unban : If type in reply, will unban user from chat group.',
-        '!unban <user_id>/<@username>: Unban user',
-        '!kick : If type in reply, will kick user from chat group.',
-        '!kick <user_id>/<@username>: Kick user from chat group',
-        '!whitelist : If type in reply, allow user to use the bot when whitelist mode is enabled',
-        '!whitelist chat: Allow everybody on current chat to use the bot when whitelist mode is enabled',
-        '!whitelist delete chat: Remove chat from whitelist',
-        '!whitelist delete user <user_id>: Remove user from whitelist',
-        '!whitelist <enable>/<disable>: Enable or disable whitelist mode',
-        '!whitelist user <user_id>: Allow user to use the bot when whitelist mode is enabled',
-        '!unwhitelist : If type in reply, remove user from whitelist'
-      },
     },
     patterns = {
-      '^!(antispam) (.*)$',
-      '^!(ban) (.*)$',
-      '^!(ban)$',
-      '^!(banlist)$',
-      '^!(unban) (.*)$',
-      '^!(unban)$',
-      '^!(kick) (.+)$',
-      '^!(kick)$',
-      '^!(kickme)$',
+      '^/(antispam) (.*)$',
+      '^/(ban) (.*)$',
+      '^/(ban)$',
+      '^/(banlist)$',
+      '^/(unban) (.*)$',
+      '^/(unban)$',
+      '^/(kick) (.+)$',
+      '^/(kick)$',
+      '^/(kickme)$',
       '^!!tgservice (.+)$',
-      '^!(whitelist)$',
-      '^!(whitelist) (chat)$',
-      '^!(whitelist) (delete) (chat)$',
-      '^!(whitelist) (delete) (user) (%d+)$',
-      '^!(whitelist) (disable)$',
-      '^!(whitelist) (enable)$',
-      '^!(whitelist) (user) (%d+)$',
-      '^!(unwhitelist)$',
-      '^!(superban)$',
-      '^!(superban) (.*)$',
-      '^!(superunban)$',
-      '^!(superunban) (.*)$'
+      '^/(whitelist)$',
+      '^/(whitelist) (chat)$',
+      '^/(whitelist) (delete) (chat)$',
+      '^/(whitelist) (delete) (user) (%d+)$',
+      '^/(whitelist) (disable)$',
+      '^/(whitelist) (enable)$',
+      '^/(whitelist) (user) (%d+)$',
+      '^/(unwhitelist)$',
+      '^/(sban)$',
+      '^/(sban) (.*)$',
+      '^/(sunban)$',
+      '^/(sunban) (.*)$'
     },
     run = run,
     pre_process = pre_process
