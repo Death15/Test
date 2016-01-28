@@ -37,11 +37,11 @@ do
   end
 
   local function run(msg, matches)
-	  -- Enable a channel
+	  -- Enable a group
 	  if matches[1] == '+' then
 		  return enable_channel(get_receiver(msg))
 	  end
-	  -- Disable a channel
+	  -- Disable a group
 	  if matches[1] == '-' then
 	    if not _config.disabled_channels then
 		    _config.disabled_channels = {}
