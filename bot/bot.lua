@@ -209,7 +209,7 @@ function create_config( )
       "logger"
       },
     sudo_users = {109722284},
-    disabled_groups = {},
+    disabled_channels = {},
     moderation = {data = 'data/moderation.json'}
   }
   serialize_to_file(config, './data/config.lua')
