@@ -19,27 +19,42 @@ local function action_by_reply(extra, success, result)
   local chat = 'chat#id'..msg.to.id
   local data = load_data(_config.moderation.data)
   if data[tostring('admins')][tostring(user_id)] then
-    status = 'Admin'
+    status = 'My Love'
   elseif data[tostring(msg.to.id)]['moderators'][tostring(user_id)] then
-    status = 'Moderator'
+    status = 'My Mod'
   elseif tonumber(result.from.id) == tonumber(our_id) then
-    status = 'Group creator'
+    status = 'No Status'
   else
-    status = 'Group Member'
+    status = 'no Status'
   end
   for v,user in pairs(_config.sudo_users) do
     if user = user_id then
-      status = 'Sudo User'
+      status = 'My Fother'
+    end
+    if data[tostring('admins')][tostring(user_id)] then
+    acces = 'BotAdmin'
+  elseif data[tostring(msg.to.id)]['moderators'][tostring(user_id)] then
+    acces = 'Moderator OF This Group'
+  elseif tonumber(result.from.id) == tonumber(our_id) then
+    acces = 'GroupAdmin'
+  else
+    acces = 'Member'
+  end
+  for v,user in pairs(_config.sudo_users) do
+    if user = user_id then
+      acces = 'Sudo'
     end
   end
-  local text = 'Full Name : '..(result.from.first_name or '')..' '..(result.from.last_name or '')..'\n\n'
-             ..'First Name : '..(result.from.first_name or '')..'\n\n'
-             ..'Last Name : '..(result.from.last_name or '')..'\n\n'
-             ..'Username : '..user_name..'\n\n'
-             ..'UserI-D : '..result.from.id..'\n\n'
-             ..'total Maseages : '..msgs..'\n\n'
-             ..'User Status : '..status..'\n\n'
-             ..'Group I-D : '..chat_id..'\n\n
+  local text = '1- Full Name : '..(result.from.first_name or '')..' '..(result.from.last_name or '')..'\n\n'
+             ..'2- First Name : '..(result.from.first_name or '')..'\n\n'
+             ..'3- Last Name : '..(result.from.last_name or '')..'\n\n'
+             ..'4- Username : '..user_name..'\n\n'
+             ..'5- UserI-D : '..result.from.id..'\n\n'
+             ..'6- total Maseages : '..msgs..'\n\n'
+             ..'7- User Status : '..status..'\n\n'
+             ..'8- Group I-D : '..msg.to.id..'\n\n'
+             ..'9- Group N-A-M-E : ' .. string.gsub(msg.to.print_name, '_', ' ') .. '\n\n'
+             ..'10- User Acces : '..acces..'\n\n'
   send_large_msg(extra.receiver, text)
 end
 
