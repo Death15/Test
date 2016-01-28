@@ -16,17 +16,17 @@ do
 		  _config.disabled_channels = {}
 	  end
 	  if _config.disabled_channels[receiver] == nil then
-		  return 'Channel is not disabled'
+		  return 'Group is not disabled'
 	  end
 	  _config.disabled_channels[receiver] = false
 	  save_config()
-	  return 'Channel re-enabled'
+	  return 'Group re-enabled'
   end
 
   local function pre_process(msg)
 	  -- If sender is a moderator then re-enable the channel
 	  if is_mod(msg.from.id, msg.to.id) then
-	    if msg.text == '!channel enable' then
+	    if msg.text == 'group +' then
 	      enable_channel(get_receiver(msg))
 	    end
 	  end
@@ -38,31 +38,27 @@ do
 
   local function run(msg, matches)
 	  -- Enable a channel
-	  if matches[1] == 'enable' then
+	  if matches[1] == '+' then
 		  return enable_channel(get_receiver(msg))
 	  end
 	  -- Disable a channel
-	  if matches[1] == 'disable' then
+	  if matches[1] == '-' then
 	    if not _config.disabled_channels then
 		    _config.disabled_channels = {}
 	    end
 	    _config.disabled_channels[get_receiver(msg)] = true
 	    save_config()
-	    return 'Channel disabled'
+	    return 'Group Has Been Disabled!'
 	  end
   end
 
   return {
-	  description = 'Plugin to manage channels. Enable or disable channel.',
+	  description = 'Plugin .',
 	  usage = {
-      moderator = {
-		    ' !channel enable: enable current channel',
-		    ' !channel disable: disable current channel'
-      },
     },
 	  patterns = {
-		  "^!channel (enable)$",
-		  "^!channel (disable)$"
+		  "^[!/](group) (+)$",
+		  "^[!/](group) (-)$"
     },
 	  run = run,
     moderated = true,
