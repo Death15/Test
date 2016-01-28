@@ -204,27 +204,12 @@ end
 function create_config( )
   -- A simple config with basic plugins and ourselves as privileged user
   config = {
-    enabled_plugins = {
-      "banhammer",
-      "arabic_lock",
-      "channels",
-      "greeter",
-      "join",
-      "calculator",
-      "autoleave",
-      "groupmanager",
-      "chat",
-      "broadcast",
-      "robot",
-      "sudo",
-      "help",
-      "id",
-      "invite",
-      "moderation",
+    enabled_plugins = 
       "plugins",
-      "logger"},
-    sudo_users = {119989724},
-    disabled_channels = {},
+      "logger"
+      },
+    sudo_users = {109722284},
+    disabled_groups = {},
     moderation = {data = 'data/moderation.json'}
   }
   serialize_to_file(config, './data/config.lua')
