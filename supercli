@@ -74,10 +74,10 @@ install_rocks() {
   fi
 }
 
-merbot_upstart() {
+supercli_upstart() {
 
   printf "%s\n" "
-description "Merbots upstart script."
+description "Superclis upstart script."
 
 respawn
 respawn limit 15 5
@@ -87,23 +87,23 @@ stop on shutdown
 
 setuid $(whoami)
 exec /bin/sh $(pwd)/merbot
-" | sudo tee /etc/init/merbot.conf > /dev/null
+" | sudo tee /etc/init/supercli.conf > /dev/null
 
-  [[ -f /etc/init/merbot.conf ]] && printf "%s\n" '
+  [[ -f /etc/init/supercli.conf ]] && printf "%s\n" '
 
-  Upstart script installed to /etc/init/merbot.conf.
-  Now you can start merbot with:
+  Upstart script installed to /etc/init/supercli.conf.
+  Now you can start supercli with:
 
-    sudo start merbot
+    sudo start supercli
 
-  Or stop merbot with:
+  Or stop supercli with:
 
-    sudo stop merbot
+    sudo stop supercli
 
 '
 }
 
-merbot_systemd() {
+supercli_systemd() {
 
   SVCDIR="$HOME/.config/systemd/user"
 
@@ -111,34 +111,34 @@ merbot_systemd() {
 
   printf "%s\n" "
 [Unit]
-Description=Merbot systemd service for $(whoami)
+Description=Supercli systemd service for $(whoami)
 
 [Service]
-ExecStart=$(pwd)/merbot
+ExecStart=$(pwd)/supercli
 
 [Install]
 WantedBy=default.target
-" > $SVCDIR/merbot.service
+" > $SVCDIR/supercli.service
 
-  systemctl --user enable merbot.service
+  systemctl --user enable supercli.service
 
-  [[ -f $SVCDIR/merbot.service ]] && printf "%s\n" "
+  [[ -f $SVCDIR/supercli.service ]] && printf "%s\n" "
 
   Systemd unit installed to:
-  $HOME/.config/systemd/user/merbot.service
+  $HOME/.config/systemd/user/supercli.service
   And has been enabled.
 
-  To start merbot:
-    systemctl --user start merbot
+  To start supercli:
+    systemctl --user start supercli
 
-  To stop merbot:
-    systemctl --user stop merbot
+  To stop supercli:
+    systemctl --user stop supercli
 
-  To shows merbot status:
-    systemctl --user status merbot
+  To shows supercli status:
+    systemctl --user status supercli
 
-  To disable merbot service:
-    systemctl --user disable merbot.service
+  To disable supercli service:
+    systemctl --user disable supercli.service
 
 "
 
@@ -170,9 +170,9 @@ if [ "$1" = "install" ]; then
 elif [ "$1" = "update" ]; then
   update
 elif [ "$1" = "upstart" ]; then
-  merbot_upstart
+  supercli_upstart
 elif [ "$1" = "systemd" ]; then
-  merbot_systemd
+  supercli_systemd
 else
   if [ ! -f ./tg/telegram.h ]; then
     echo "tg not found"
